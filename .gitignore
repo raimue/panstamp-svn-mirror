@@ -1,3 +1,4 @@
 *.pyc
+python/pyswapdmtgui/src/config/devices/
 python/pyswapdmtgui/src/config/swapnet.json
 python/pyswapdmt/src/swapnet.json
