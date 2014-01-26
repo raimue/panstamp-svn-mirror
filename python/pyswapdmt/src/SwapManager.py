@@ -117,11 +117,10 @@ class SwapManager(SwapInterface):
         """
         Class constructor
         
-        'verbose'  Print out SWAP frames or not
         'monitor'  Print out network events or not
         """
         # Superclass call
-        SwapInterface.__init__(self, settings, verbose)
+        SwapInterface.__init__(self, settings)
         # Print SWAP activity
         self._printSWAP = monitor
         # Mote address in SYNC mode
