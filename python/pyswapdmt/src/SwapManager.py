@@ -26,8 +26,9 @@ __author__="Daniel Berenguer"
 __date__ ="$Aug 21, 2011 4:30:47 PM$"
 #########################################################################
 
-from SwapInterface import SwapInterface
-from swap.SwapDefs import SwapState
+from swap.SwapInterface import SwapInterface
+from swap.protocol.SwapDefs import SwapState
+from swap.SwapException import SwapException
 
 class SwapManager(SwapInterface):
     """

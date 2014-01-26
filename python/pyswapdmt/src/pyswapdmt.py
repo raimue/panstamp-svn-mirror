@@ -29,10 +29,10 @@ __version__ = "1.0"
 #########################################################################
 
 from SwapManager import SwapManager
-from SwapException import SwapException
-from xmltools.XmlDevice import XmlDeviceDir
+from swap.SwapException import SwapException
+from swap.xmltools.XmlDevice import XmlDeviceDir
 
-from optik import OptionParser
+from optparse import OptionParser
 
 
 def _quit():
