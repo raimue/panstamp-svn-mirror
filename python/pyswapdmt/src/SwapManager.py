@@ -85,7 +85,7 @@ class SwapManager(SwapInterface):
         
         'mote'  Mote detected
         """
-        if self._printSWAP == True:
+        if self._monitor == True:
             print "New mote with address " + str(mote.address) + " : " + mote.definition.product + \
             " (by " + mote.definition.manufacturer + ")"
 
@@ -96,7 +96,7 @@ class SwapManager(SwapInterface):
         
         'endpoint'  Endpoint detected
         """
-        if self._printSWAP == True:
+        if self._monitor == True:
             print "New endpoint with Reg ID = " + str(endpoint.getRegId()) + " : " + endpoint.name
 
 
@@ -106,7 +106,7 @@ class SwapManager(SwapInterface):
         
         'mote'  Mote having changed
         """
-        if self._printSWAP == True:
+        if self._monitor == True:
             print "Mote with address " + str(mote.address) + " switched to \"" + \
             SwapState.toString(mote.state) + "\""
         # SYNC mode entered?
@@ -120,7 +120,7 @@ class SwapManager(SwapInterface):
         
         'mote'  Mote having changed
         """
-        if self._printSWAP == True:
+        if self._monitor == True:
             print "Mote changed address to " + str(mote.address)
 
 
@@ -130,7 +130,7 @@ class SwapManager(SwapInterface):
         
         'endpoint' Endpoint object
         """
-        if self._printSWAP == True:
+        if self._monitor == True:
             print endpoint.name + " in address " + str(endpoint.getRegAddress()) + " changed to " + endpoint.getValueInAscii()
             
             
@@ -140,7 +140,7 @@ class SwapManager(SwapInterface):
         
         'param' Config parameter object
         """
-        if self._printSWAP == True:
+        if self._monitor == True:
             print param.name + " in address " + str(param.getRegAddress()) + " changed to " + param.getValueInAscii()
 
 
@@ -167,7 +167,7 @@ class SwapManager(SwapInterface):
         # Superclass call
         SwapInterface.__init__(self, settings)
         # Print SWAP activity
-        self._printSWAP = monitor
         self._sniff = sniff
+        self._monitor = monitor
         # Mote address in SYNC mode
         self._addrInSyncMode = None
