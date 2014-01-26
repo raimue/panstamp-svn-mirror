@@ -28,6 +28,9 @@ __appname__ = "SWAPdmt (command line version)"
 __version__ = "1.0"
 #########################################################################
 
+import os
+import sys
+
 from SwapManager import SwapManager
 from swap.SwapException import SwapException
 from swap.xmltools.XmlDevice import XmlDeviceDir
@@ -95,6 +98,9 @@ if __name__ == "__main__":
 
     (options, args) = parser.parse_args()   
 
+    # Path to the SWAP config file
+    settings = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "settings.xml")
+
     # Dispatch commands
     if options.version == True:
         print __version__
@@ -102,7 +108,7 @@ if __name__ == "__main__":
 
     try:
         # Start SWAP manager tool
-        manager = SwapManager(options.sniff, options.monitor)
+        manager = SwapManager(settings, options.sniff, options.monitor)
 
         # Configuration commands
         if options.config == True:

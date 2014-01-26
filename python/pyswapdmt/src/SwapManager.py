@@ -113,7 +113,7 @@ class SwapManager(SwapInterface):
         self._addrInSyncMode = None
 
 
-    def __init__(self, verbose=False, monitor=False):
+    def __init__(self, settings=None, verbose=False, monitor=False):
         """
         Class constructor
         
@@ -121,7 +121,7 @@ class SwapManager(SwapInterface):
         'monitor'  Print out network events or not
         """
         # Superclass call
-        SwapInterface.__init__(self, None, verbose)        
+        SwapInterface.__init__(self, settings, verbose)
         # Print SWAP activity
         self._printSWAP = monitor
         # Mote address in SYNC mode
