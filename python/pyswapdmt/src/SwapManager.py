@@ -113,7 +113,7 @@ class SwapManager(SwapInterface):
         self._addrInSyncMode = None
 
 
-    def __init__(self, settings=None, verbose=False, monitor=False):
+    def __init__(self, settings=None, sniff=False, monitor=False):
         """
         Class constructor
         
@@ -123,5 +123,6 @@ class SwapManager(SwapInterface):
         SwapInterface.__init__(self, settings)
         # Print SWAP activity
         self._printSWAP = monitor
+        self._sniff = sniff
         # Mote address in SYNC mode
         self._addrInSyncMode = None
