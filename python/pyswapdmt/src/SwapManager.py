@@ -27,13 +27,58 @@ __date__ ="$Aug 21, 2011 4:30:47 PM$"
 #########################################################################
 
 from swap.SwapInterface import SwapInterface
-from swap.protocol.SwapDefs import SwapState
+from swap.protocol.SwapDefs import SwapState, SwapFunction
 from swap.SwapException import SwapException
 
 class SwapManager(SwapInterface):
     """
     SWAP Management Class
     """
+    def get_message_type(self, packet):
+        """
+        Return string defining the type of message
+
+        @param packet: SWAP packet
+
+        @return string
+        """
+        if packet.function == SwapFunction.COMMAND:
+            msgtype = "C"
+        elif packet.function == SwapFunction.QUERY:
+            msgtype = "Q"
+        elif packet.function == SwapFunction.STATUS:
+            msgtype = "S"
+        else:
+            msgtype = "?"
+
+        return msgtype
+
+    def swapPacketReceived(self, packet):
+        """
+        New SWAP packet received
+
+        @param packet: SWAP packet received
+        """
+        if self._sniff:
+            msgtype = self.get_message_type(packet)
+            rssi = "{0:02X}".format(packet.rssi)
+            lqi = "{0:02X}".format(packet.lqi)
+
+            print "<-" + msgtype + "-- " + "(" + rssi + lqi + ")" + packet.toString()
+
+    def swapPacketSent(self, packet):
+        """
+        SWAP packet transmitted
+
+        @param packet: SWAP packet transmitted
+        """
+        if self._sniff:
+            msgtype = self.get_message_type(packet)
+            rssi = "{0:02X}".format(packet.rssi)
+            lqi = "{0:02X}".format(packet.lqi)
+
+            print "--" + msgtype + "-> " + "(" + rssi + lqi + ")" + packet.toString()
+
     def newMoteDetected(self, mote):
         """
         New mote detected by SWAP server
