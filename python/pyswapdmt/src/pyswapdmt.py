@@ -53,16 +53,16 @@ if __name__ == "__main__":
 
     parser = OptionParser()
     # Print version
-    parser.add_option("--version", action="store_true", default="False", dest="version",
+    parser.add_option("--version", action="store_true", default=False, dest="version",
                       help="Print version number")
     # Monitor network activity
-    parser.add_option("--monitor", action="store_true", default="False", dest="monitor",
+    parser.add_option("--monitor", action="store_true", default=False, dest="monitor",
                       help="Monitor SWAP network activity")
     # Sniff SWAP network
-    parser.add_option("--sniff", action="store_true", default="False", dest="sniff",
+    parser.add_option("--sniff", action="store_true", default=False, dest="sniff",
                       help="Sniff SWAP network")
     # Configure device
-    parser.add_option("-c", "--config", action="store_true", default="False", dest="config",
+    parser.add_option("-c", "--config", action="store_true", default=False, dest="config",
                       help="Configure SWAP device")
     parser.add_option("-d", "--device", type="string", dest="device",
                       help="Product name")
