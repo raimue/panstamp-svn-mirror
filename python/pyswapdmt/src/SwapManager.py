@@ -26,6 +26,7 @@ __author__="Daniel Berenguer"
 __date__ ="$Aug 21, 2011 4:30:47 PM$"
 #########################################################################
 
+import time
 from swap.SwapInterface import SwapInterface
 from swap.protocol.SwapDefs import SwapState, SwapFunction
 from swap.SwapException import SwapException
@@ -59,12 +60,16 @@ class SwapManager(SwapInterface):
 
         @param packet: SWAP packet received
         """
-        if self._sniff:
-            msgtype = self.get_message_type(packet)
-            rssi = "{0:02X}".format(packet.rssi)
-            lqi = "{0:02X}".format(packet.lqi)
+        msgtype = self.get_message_type(packet)
+        rssi = "{0:02X}".format(packet.rssi)
+        lqi = "{0:02X}".format(packet.lqi)
+        data = packet.toString()
+        msgtime = time.strftime("%Y-%m-%d %H:%M:%S")
 
-            print "<-" + msgtype + "-- " + "(" + rssi + lqi + ")" + packet.toString()
+        if self._sniff:
+            print msgtime + " <-- " + "(" + rssi + lqi + ")" + data
+        if self._monitor:
+            print "{} {:^3} <-{}-- {:^3} {}".format(msgtime, packet.srcAddress, msgtype, packet.destAddress, data)
 
     def swapPacketSent(self, packet):
         """
@@ -72,12 +77,17 @@ class SwapManager(SwapInterface):
 
         @param packet: SWAP packet transmitted
         """
-        if self._sniff:
-            msgtype = self.get_message_type(packet)
-            rssi = "{0:02X}".format(packet.rssi)
-            lqi = "{0:02X}".format(packet.lqi)
+        msgtype = self.get_message_type(packet)
+        rssi = "{0:02X}".format(packet.rssi)
+        lqi = "{0:02X}".format(packet.lqi)
+        data = packet.toString()
+        msgtime = time.strftime("%Y-%m-%d %H:%M:%S")
 
-            print "--" + msgtype + "-> " + "(" + rssi + lqi + ")" + packet.toString()
+        if self._sniff:
+            print msgtime + " --> " + "(" + rssi + lqi + ")" + data
+        if self._monitor:
+            print "{} {:^3} --{}-> {:^3} {}".format(msgtime, packet.srcAddress, msgtype, packet.destAddress, data)
+
 
     def newMoteDetected(self, mote):
         """
