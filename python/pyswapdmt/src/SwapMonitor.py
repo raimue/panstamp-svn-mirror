@@ -58,12 +58,12 @@ class SwapMonitor(SwapCallback):
     def swapPacketReceived(self, packet):
         msgtime = time.strftime("%Y-%m-%d %H:%M:%S")
         msgtype = self._get_message_type(packet)
-        print "{} {:^3} <-{}-- {:^3} {}".format(msgtime, packet.srcAddress, msgtype, packet.destAddress, packet.toString())
+        print "[{}] {:>3} <-{}-- {:<3} {}".format(msgtime, packet.srcAddress, msgtype, packet.destAddress, packet.toString())
 
     def swapPacketSent(self, packet):
         msgtime = time.strftime("%Y-%m-%d %H:%M:%S")
         msgtype = self._get_message_type(packet)
-        print "{} {:^3} --{}-> {:^3} {}".format(msgtime, packet.srcAddress, msgtype, packet.destAddress, packet.toString())
+        print "[{}] {:>3} --{}-> {:<3} {}".format(msgtime, packet.srcAddress, msgtype, packet.destAddress, packet.toString())
 
     def __init__(self):
         pass
