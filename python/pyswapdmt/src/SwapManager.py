@@ -26,33 +26,16 @@ __author__="Daniel Berenguer"
 __date__ ="$Aug 21, 2011 4:30:47 PM$"
 #########################################################################
 
-import time
 from swap.SwapInterface import SwapInterface
 from swap.protocol.SwapDefs import SwapState, SwapFunction
 from swap.SwapException import SwapException
+from SwapSniffer import SwapSniffer
+from SwapMonitor import SwapMonitor
 
 class SwapManager(SwapInterface):
     """
     SWAP Management Class
     """
-    def get_message_type(self, packet):
-        """
-        Return string defining the type of message
-
-        @param packet: SWAP packet
-
-        @return string
-        """
-        if packet.function == SwapFunction.COMMAND:
-            msgtype = "C"
-        elif packet.function == SwapFunction.QUERY:
-            msgtype = "Q"
-        elif packet.function == SwapFunction.STATUS:
-            msgtype = "S"
-        else:
-            msgtype = "?"
-
-        return msgtype
 
     def swapPacketReceived(self, packet):
         """
@@ -60,16 +43,8 @@ class SwapManager(SwapInterface):
 
         @param packet: SWAP packet received
         """
-        msgtype = self.get_message_type(packet)
-        rssi = "{0:02X}".format(packet.rssi)
-        lqi = "{0:02X}".format(packet.lqi)
-        data = packet.toString()
-        msgtime = time.strftime("%Y-%m-%d %H:%M:%S")
-
-        if self._sniff:
-            print msgtime + " <-- " + "(" + rssi + lqi + ")" + data
-        if self._monitor:
-            print "{} {:^3} <-{}-- {:^3} {}".format(msgtime, packet.srcAddress, msgtype, packet.destAddress, data)
+        for c in self._callbacks:
+            c.swapPacketReceived(packet)
 
     def swapPacketSent(self, packet):
         """
@@ -77,16 +52,8 @@ class SwapManager(SwapInterface):
 
         @param packet: SWAP packet transmitted
         """
-        msgtype = self.get_message_type(packet)
-        rssi = "{0:02X}".format(packet.rssi)
-        lqi = "{0:02X}".format(packet.lqi)
-        data = packet.toString()
-        msgtime = time.strftime("%Y-%m-%d %H:%M:%S")
-
-        if self._sniff:
-            print msgtime + " --> " + "(" + rssi + lqi + ")" + data
-        if self._monitor:
-            print "{} {:^3} --{}-> {:^3} {}".format(msgtime, packet.srcAddress, msgtype, packet.destAddress, data)
+        for c in self._callbacks:
+            c.swapPacketSent(packet)
 
 
     def newMoteDetected(self, mote):
@@ -176,8 +143,15 @@ class SwapManager(SwapInterface):
         """
         # Superclass call
         SwapInterface.__init__(self, settings)
-        # Print SWAP activity
-        self._sniff = sniff
-        self._monitor = monitor
         # Mote address in SYNC mode
         self._addrInSyncMode = None
+
+        # Initialize callbacks as empty list
+        self._callbacks = []
+        # Add callbacks as requested
+        if sniff:
+            c = SwapSniffer()
+            self._callbacks.append(c)
+        if monitor:
+            c = SwapMonitor()
+            self._callbacks.append(c)
