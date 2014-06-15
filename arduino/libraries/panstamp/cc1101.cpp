@@ -193,7 +193,7 @@ void CC1101::reset(void)
   cc1101_Deselect();                    // Deselect CC1101
 
   setDefaultRegs();                     // Reconfigure CC1101
-  setRegsFromEeprom();                  // Take user settings from EEPROM
+//  setRegsFromEeprom();                  // Take user settings from EEPROM
 }
 
 /**
@@ -211,19 +211,32 @@ void CC1101::setDefaultRegs(void)
   writeReg(CC1101_PKTCTRL1,  CC1101_DEFVAL_PKTCTRL1);
   writeReg(CC1101_PKTCTRL0,  CC1101_DEFVAL_PKTCTRL0);
 
-  // Set default synchronization word
-  setSyncWord(CC1101_DEFVAL_SYNC1, CC1101_DEFVAL_SYNC0, false);
+  // Sync word
+  if ((syncWord[0] == 0xFF) && (syncWord[1] == 0xFF) || (syncWord[0] == 0) || (syncWord[1] == 0))
+    setSyncWord(CC1101_DEFVAL_SYNC1, CC1101_DEFVAL_SYNC0); // Set default synchronization word
+  else
+    setSyncWord(syncWord);
 
-  // Set default device address
-  setDevAddress(CC1101_DEFVAL_ADDR, false);
+  // Device addres
+  if (devAddress == 0 || devAddress == 0xFF)
+    setDevAddress(CC1101_DEFVAL_ADDR); // Set default device address
+  else
+    writeReg(CC1101_ADDR, devAddress);
+
   // Set default frequency channel
-  setChannel(CC1101_DEFVAL_CHANNR, false);
+  if (channel == 0xFF)
+    setChannel(CC1101_DEFVAL_CHANNR);    // Default value
+  else
+    setChannel(channel);
   
   writeReg(CC1101_FSCTRL1,  CC1101_DEFVAL_FSCTRL1);
   writeReg(CC1101_FSCTRL0,  CC1101_DEFVAL_FSCTRL0);
 
-  // Set default carrier frequency = 868 MHz
-  setCarrierFreq(CFREQ_868);
+  // Carrier frequency
+  if (carrierFreq == 0xFF)
+    setCarrierFreq(CFREQ_868);  // Set default carrier frequency = 868 MHz
+  else
+    setCarrierFreq(carrierFreq);
 
   writeReg(CC1101_MDMCFG4,  CC1101_DEFVAL_MDMCFG4);
   writeReg(CC1101_MDMCFG3,  CC1101_DEFVAL_MDMCFG3);
@@ -375,6 +388,11 @@ void CC1101::setCarrierFreq(byte freq)
       writeReg(CC1101_FREQ1,  CC1101_DEFVAL_FREQ1_433);
       writeReg(CC1101_FREQ0,  CC1101_DEFVAL_FREQ0_433);
       break;
+    case CFREQ_918:
+      writeReg(CC1101_FREQ2,  CC1101_DEFVAL_FREQ2_918);
+      writeReg(CC1101_FREQ1,  CC1101_DEFVAL_FREQ1_918);
+      writeReg(CC1101_FREQ0,  CC1101_DEFVAL_FREQ0_918);
+      break;
     default:
       writeReg(CC1101_FREQ2,  CC1101_DEFVAL_FREQ2_868);
       writeReg(CC1101_FREQ1,  CC1101_DEFVAL_FREQ1_868);
@@ -390,6 +408,7 @@ void CC1101::setCarrierFreq(byte freq)
  * 
  * Set registers from EEPROM
  */
+/*
 void CC1101::setRegsFromEeprom(void)
 {
   byte bVal;
@@ -412,7 +431,7 @@ void CC1101::setRegsFromEeprom(void)
   if (bVal > 0)
     setDevAddress(bVal, false);
 }
-
+*/
 /**
  * setPowerDownState
  * 

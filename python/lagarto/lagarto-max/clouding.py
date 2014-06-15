@@ -24,6 +24,8 @@ __author__="Daniel Berenguer"
 __date__  ="$Mar 31, 2012$"
 #########################################################################
 
+from maxdefs import MaxDefinitions
+
 import logging
 import os
 import httplib
@@ -32,6 +34,7 @@ import json
 import subprocess
 from time import strftime
 
+
 class ApiLog:
     """
     API logging class
@@ -39,6 +42,7 @@ class ApiLog:
     # Logging
     logger = logging.getLogger('Lagarto-Max')
     logging.basicConfig(format='%(asctime)s %(module)s %(levelname)s %(message)s',filename='lagarto-max-cloud.log',level=logging.INFO)
+
 
 class PachubePacket:
     """
@@ -259,3 +263,66 @@ class AutoRemotePacket:
         # Parameters
         self.params = urllib.urlencode(params_dict)
         ApiLog.logger.debug('AutoRemotePacket.params: '+self.params)
+
+
+class GroveStreamsPacket:
+    """
+    Generic GroveStreams packet class
+    """
+    def push(self):
+        """
+        Push values to GroveStreams
+        
+        @return response from GroveStreams
+        """        
+
+        header = {"Connection" : "close", "Content-type": "application/json",
+                       "X-Forwarded-For": self.endpoints[0][0], "Cookie" : "api_key=" + self.api_key}
+
+        url = "grovestreams.com"
+        res = None
+
+        try:
+            conn = httplib.HTTPConnection(url, timeout=8)
+            if self.template_id is not None:
+                conn.request('PUT', "/api/feed?compTmplId=" + self.template_id, json.dumps(self.datastreams), header)
+            else:
+                conn.request('PUT', "/api/feed", json.dumps(self.datastreams), header)
+            response = conn.getresponse()
+            res = response.reason
+        except:
+            pass
+        
+        conn.close()
+
+        return res
+
+
+    def __init__(self, api_key, template_id, endpoints):
+        """
+        Constructor
+        
+        @param api_key: GroveStreams API key
+        @param template_id: component template id
+        @param endpoints: list of (datastream, value) pairs
+        """
+        # API key
+        self.api_key = api_key
+        
+        # Component ID
+        self.template_id = None
+        if template_id != "":
+            self.template_id = template_id        
+
+        # List of endpoints
+        self.endpoints = endpoints
+
+        self.datastreams = []   
+
+        for endp in endpoints:
+            dstream = {"compId" : endp[0]}
+            dstream["streamId"] = "data"
+            dstream["data"] = endp[1]
+            self.datastreams.append(dstream)
+
+

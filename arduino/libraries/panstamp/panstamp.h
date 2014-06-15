@@ -84,7 +84,8 @@ enum SYSTATE
   SYSTATE_RXON,
   SYSTATE_RXOFF,
   SYSTATE_SYNC,
-  SYSTATE_LOWBAT
+  SYSTATE_LOWBAT,
+  SYSTATE_UPGRADE
 };
 
 
@@ -234,10 +235,8 @@ class PANSTAMP
      * wakeUp
      *
      * Wake from sleep mode
-     *
-     * 'rxOn' Enter RX_ON state after waking up
      */
-    void wakeUp(bool rxOn=true);
+    void wakeUp(void);
 
     /**
      * goToSleep
